@@ -654,7 +654,14 @@
             <summary>
             Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
             </summary>
+            <param name="maxItems"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.#ctor(System.Nullable{System.Int32},System.Int32)">
+            <summary>
+            Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
+            </summary>
             <param name="width"></param>
+            <param name="maxCaptionItems"></param>
         </member>
         <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ProcessDialogKey(System.Windows.Forms.Keys)">
             <summary>

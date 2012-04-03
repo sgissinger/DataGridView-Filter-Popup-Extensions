@@ -137,37 +137,41 @@ namespace DgvFilterPopup
                 return;
             }
 
-            String ResultFilterExpression = String.Empty;
-            String ResultFilterCaption = OriginalDataGridViewColumnHeaderText;
-
-            FilterResult FilterResult = new FilterResult();
+            FilterResult filterResult = new FilterResult();
+            filterResult.Caption = this.OriginalDataGridViewColumnHeaderText;
 
             if (this.checkBoxSelectNull.Checked)
             {
-                FilterResult.Expression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
-                FilterResult.Caption = "\n= Ø";
+                filterResult.Expression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
+                filterResult.Caption += "\n= Ø";
             }
+
+            if (!String.IsNullOrEmpty(filterResult.Expression))
+                filterResult.Expression += " OR ";
+
+            if (this.checkedItems.Count > 0)
+                filterResult.Expression += this.DataGridViewColumn.DataPropertyName + " IN (";
 
             Int32 i = 0;
 
             foreach (String filter in this.checkedItems)
             {
                 if (!String.IsNullOrEmpty(filter))
-                    FilterResult = this.ApplyFilter(FilterResult, filter, i);
+                    filterResult = this.ApplyFilter(filterResult, filter, i);
 
                 i++;
             }
 
-            ResultFilterExpression = FilterResult.Expression;
-            ResultFilterCaption += FilterResult.Caption;
+            if (this.checkedItems.Count > 0)
+                filterResult.Expression = filterResult.Expression.Substring(0, filterResult.Expression.Length - 1) + ")";
 
             if (i > this.maxCaptionItems)
-                ResultFilterCaption += "\n...";
+                filterResult.Caption += "\n...";
 
-            if (!String.IsNullOrEmpty(ResultFilterExpression))
+            if (!String.IsNullOrEmpty(filterResult.Expression))
             {
-                FilterExpression = ResultFilterExpression;
-                FilterCaption = ResultFilterCaption;
+                FilterExpression = filterResult.Expression;
+                FilterCaption = filterResult.Caption;
                 FilterManager.RebuildFilter();
             }
             else
@@ -200,11 +204,6 @@ namespace DgvFilterPopup
         /// <returns></returns>
         private FilterResult ApplyFilter(FilterResult filterResult, String filterText, Int32 index)
         {
-            if (!String.IsNullOrEmpty(filterResult.Expression))
-            {
-                filterResult.Expression += " OR ";
-            }
-
             if (index < this.maxCaptionItems)
                 filterResult.Caption += "\n";
 
@@ -213,7 +212,7 @@ namespace DgvFilterPopup
                 // Managing the string-column case
                 String escapedFilterValue = DgvBaseColumnFilter.StringEscape(filterText.ToString());
 
-                filterResult.Expression += this.DataGridViewColumn.DataPropertyName + " = '" + escapedFilterValue + "'";
+                filterResult.Expression += "'" + escapedFilterValue + "',";
 
                 if (index < this.maxCaptionItems)
                     filterResult.Caption += "= " + filterText;
@@ -225,7 +224,7 @@ namespace DgvFilterPopup
 
                 if (!String.IsNullOrEmpty(formattedValue))
                 {
-                    filterResult.Expression += this.DataGridViewColumn.DataPropertyName + "= " + formattedValue;
+                    filterResult.Expression += formattedValue + ",";
 
                     if (index < this.maxCaptionItems)
                         filterResult.Caption += "= " + filterText;
