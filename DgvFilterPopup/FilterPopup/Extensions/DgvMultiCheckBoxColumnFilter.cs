@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Data;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace DgvFilterPopup
 {
@@ -143,14 +144,16 @@ namespace DgvFilterPopup
             if (this.checkBoxSelectNull.Checked)
             {
                 filterResult.Expression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
-                filterResult.Caption += "\n= Ø";
+                filterResult.Caption += "\n= Ã˜";
             }
 
-            if (!String.IsNullOrEmpty(filterResult.Expression))
-                filterResult.Expression += " OR ";
-
             if (this.checkedItems.Count > 0)
+            {
+                if (!String.IsNullOrEmpty(filterResult.Expression))
+                    filterResult.Expression += " OR ";
+
                 filterResult.Expression += this.DataGridViewColumn.DataPropertyName + " IN (";
+            }
 
             Int32 i = 0;
 
@@ -163,7 +166,7 @@ namespace DgvFilterPopup
             }
 
             if (this.checkedItems.Count > 0)
-                filterResult.Expression = filterResult.Expression.Substring(0, filterResult.Expression.Length - 1) + ")";
+                filterResult.Expression += filterResult.Expression.Substring(0, filterResult.Expression.Length - 1) + ")";
 
             if (i > this.maxCaptionItems)
                 filterResult.Caption += "\n...";
