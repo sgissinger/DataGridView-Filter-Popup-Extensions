@@ -34,6 +34,19 @@ namespace DgvFilterPopup {
 
 
         /// <summary>
+        /// TODO: Documentation ProcessDialogKey
+        /// </summary>
+        /// <param name="keyData"></param>
+        /// <returns></returns>
+        protected override Boolean ProcessDialogKey(Keys keyData)
+        {
+            if ((keyData & Keys.Alt) == Keys.Alt)
+                return false;
+
+            return base.ProcessDialogKey(keyData);
+        }
+
+        /// <summary>
         /// Perform filter initialitazion and raises the FilterInitializing event.
         /// </summary>
         /// <param name="sender">The source of the event.</param>

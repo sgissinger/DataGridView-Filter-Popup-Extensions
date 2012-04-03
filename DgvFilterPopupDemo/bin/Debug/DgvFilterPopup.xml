@@ -240,6 +240,13 @@
             Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
             </summary>
         </member>
+        <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.ProcessDialogKey(System.Windows.Forms.Keys)">
+            <summary>
+            TODO: Documentation ProcessDialogKey
+            </summary>
+            <param name="keyData"></param>
+            <returns></returns>
+        </member>
         <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
             <summary>
             Perform filter initialitazion and raises the FilterInitializing event.
@@ -515,6 +522,13 @@
             Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
             </summary>
             <param name="width"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ProcessDialogKey(System.Windows.Forms.Keys)">
+            <summary>
+            TODO: Documentation ProcessDialogKey
+            </summary>
+            <param name="keyData"></param>
+            <returns></returns>
         </member>
         <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
             <summary>

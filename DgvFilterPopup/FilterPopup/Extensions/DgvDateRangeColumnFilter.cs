@@ -6,18 +6,21 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DgvFilterPopup {
+namespace DgvFilterPopup
+{
 
     /// <summary>
     /// An extended <i>column filter</i> implementation allowing filters on date ranges.
     /// </summary>
-    public partial class DgvDateRangeColumnFilter : DgvBaseColumnFilter {
+    public partial class DgvDateRangeColumnFilter : DgvBaseColumnFilter
+    {
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DgvDateRangeColumnFilter"/> class.
         /// </summary>
-        public DgvDateRangeColumnFilter() {
+        public DgvDateRangeColumnFilter()
+        {
             InitializeComponent();
             comboBoxOperator.SelectedValueChanged += new EventHandler(onFilterChanged);
             dateTimePickerValue.TextChanged += new EventHandler(onFilterChanged);
@@ -27,18 +30,18 @@ namespace DgvFilterPopup {
         /// <summary>
         /// Gets the ComboBox control containing the available operators.
         /// </summary>
-        public ComboBox ComboBoxOperator { get { return comboBoxOperator; }}
+        public ComboBox ComboBoxOperator { get { return comboBoxOperator; } }
 
-        
+
         /// <summary>
         /// Gets the DateTimePicker control containing the date value.
         /// </summary>
-        public DateTimePicker DateTimePickerValue { get { return dateTimePickerValue; }}
+        public DateTimePicker DateTimePickerValue { get { return dateTimePickerValue; } }
 
         /// <summary>
         /// Gets the DateTimePicker control containing the second date value.
         /// </summary>
-        public DateTimePicker DateTimePickerValue2 { get { return dateTimePickerValue2; }}
+        public DateTimePicker DateTimePickerValue2 { get { return dateTimePickerValue2; } }
 
         /// <summary>
         /// Perform filter initialitazion and raises the FilterInitializing event.
@@ -51,10 +54,11 @@ namespace DgvFilterPopup {
         /// You can ovverride this method to provide initialization code or you can create an event handler and 
         /// set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
         /// </remarks>
-        protected override void OnFilterInitializing(object sender, CancelEventArgs e) {
+        protected override void OnFilterInitializing(object sender, CancelEventArgs e)
+        {
             base.OnFilterInitializing(sender, e);
             if (e.Cancel) return;
-            comboBoxOperator.Items.AddRange (new object[] { "[...]","=", "<>", ">", "<", "<=", ">=", "= Ø", "<> Ø" });
+            comboBoxOperator.Items.AddRange(new object[] { "[...]", "=", "<>", ">", "<", "<=", ">=", "= Ø", "<> Ø" });
             comboBoxOperator.SelectedIndex = 0;
             this.FilterHost.RegisterComboBox(comboBoxOperator);
         }
@@ -70,21 +74,24 @@ namespace DgvFilterPopup {
         /// The <see cref="DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
         /// Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
         /// </remarks>
-        protected override void OnFilterExpressionBuilding(object sender, CancelEventArgs e){
-         	base.OnFilterExpressionBuilding(sender, e);
-            if (e.Cancel) {
+        protected override void OnFilterExpressionBuilding(object sender, CancelEventArgs e)
+        {
+            base.OnFilterExpressionBuilding(sender, e);
+            if (e.Cancel)
+            {
                 FilterManager.RebuildFilter();
                 return;
-            } 
+            }
 
             string ResultFilterExpression = "";
-            string ResultFilterCaption = OriginalDataGridViewColumnHeaderText ;
+            string ResultFilterCaption = OriginalDataGridViewColumnHeaderText;
 
             // Managing the NULL and NOT NULL cases which are type-independent
             if (comboBoxOperator.Text == "= Ø") ResultFilterExpression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
             if (comboBoxOperator.Text == "<> Ø") ResultFilterExpression = GetNotNullCondition(this.DataGridViewColumn.DataPropertyName);
 
-            if (ResultFilterExpression != "") {
+            if (ResultFilterExpression != "")
+            {
                 FilterExpression = ResultFilterExpression;
                 FilterCaption = ResultFilterCaption + "\n " + comboBoxOperator.Text;
                 FilterManager.RebuildFilter();
@@ -93,31 +100,45 @@ namespace DgvFilterPopup {
 
             string FormattedValue = "";
             string FormattedValueUntil = "";
-            
+
             FormattedValue = FormatValue(dateTimePickerValue.Value, this.ColumnDataType);
             FormattedValueUntil = FormatValue(dateTimePickerValue2.Value.AddDays(1), this.ColumnDataType);
 
-            if (comboBoxOperator.Text == "[...]") {
+            if (comboBoxOperator.Text == "[...]")
+            {
                 FilterExpression = this.DataGridViewColumn.DataPropertyName + ">=" + FormattedValue
                                    + " AND " + this.DataGridViewColumn.DataPropertyName + "<" + FormattedValueUntil;
 
-                FilterCaption = OriginalDataGridViewColumnHeaderText +  "\n = [" + dateTimePickerValue.Text + " , "+ dateTimePickerValue2.Text + "]";
+                FilterCaption = OriginalDataGridViewColumnHeaderText + "\n = [" + dateTimePickerValue.Text + " , " + dateTimePickerValue2.Text + "]";
             }
-            else { 
+            else
+            {
                 FilterExpression = this.DataGridViewColumn.DataPropertyName + " " + comboBoxOperator.Text + FormattedValue;
-                FilterCaption = OriginalDataGridViewColumnHeaderText  + "\n" + comboBoxOperator.Text + " " + dateTimePickerValue.Text ;
+                FilterCaption = OriginalDataGridViewColumnHeaderText + "\n" + comboBoxOperator.Text + " " + dateTimePickerValue.Text;
             }
 
             FilterManager.RebuildFilter();
         }
 
-        private void onFilterChanged(object sender, EventArgs e){
-            if (sender == comboBoxOperator) { 
+        private void onFilterChanged(object sender, EventArgs e)
+        {
+            if (sender == comboBoxOperator)
+            {
                 dateTimePickerValue2.Visible = (comboBoxOperator.Text == "[...]");
             }
             if (!FilterApplySoon || !this.Visible) return;
             Active = true;
             FilterExpressionBuild();
+        }
+
+        private void dateTimePickerValue_DropDown(object sender, EventArgs e)
+        {
+            this.FilterHost.Popup.AutoClose = false;
+        }
+
+        private void dateTimePickerValue_CloseUp(object sender, EventArgs e)
+        {
+            this.FilterHost.Popup.AutoClose = true;
         }
     }
 }

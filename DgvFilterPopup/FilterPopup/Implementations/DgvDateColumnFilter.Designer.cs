@@ -42,6 +42,8 @@ namespace DgvFilterPopup {
             this.dateTimePickerValue.Name = "dateTimePickerValue";
             this.dateTimePickerValue.Size = new System.Drawing.Size(127, 20);
             this.dateTimePickerValue.TabIndex = 1;
+            this.dateTimePickerValue.CloseUp += new System.EventHandler(this.dateTimePickerValue_CloseUp);
+            this.dateTimePickerValue.DropDown += new System.EventHandler(this.dateTimePickerValue_DropDown);
             // 
             // DgvDateColumnFilter
             // 

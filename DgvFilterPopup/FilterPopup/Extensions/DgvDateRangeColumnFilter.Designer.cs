@@ -43,14 +43,18 @@ namespace DgvFilterPopup {
             this.dateTimePickerValue.Name = "dateTimePickerValue";
             this.dateTimePickerValue.Size = new System.Drawing.Size(127, 20);
             this.dateTimePickerValue.TabIndex = 1;
+            this.dateTimePickerValue.CloseUp += new System.EventHandler(this.dateTimePickerValue_CloseUp);
+            this.dateTimePickerValue.DropDown += new System.EventHandler(this.dateTimePickerValue_DropDown);
             // 
-            // dateTimePickerValueUntil
+            // dateTimePickerValue2
             // 
             this.dateTimePickerValue2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimePickerValue2.Location = new System.Drawing.Point(58, 29);
-            this.dateTimePickerValue2.Name = "dateTimePickerValueUntil";
+            this.dateTimePickerValue2.Name = "dateTimePickerValue2";
             this.dateTimePickerValue2.Size = new System.Drawing.Size(127, 20);
             this.dateTimePickerValue2.TabIndex = 2;
+            this.dateTimePickerValue2.CloseUp += new System.EventHandler(this.dateTimePickerValue_CloseUp);
+            this.dateTimePickerValue2.DropDown += new System.EventHandler(this.dateTimePickerValue_DropDown);
             // 
             // DgvDateRangeColumnFilter
             // 
