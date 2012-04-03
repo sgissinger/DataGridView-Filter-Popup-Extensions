@@ -7,13 +7,17 @@ using System.Text;
 using System.Windows.Forms;
 using DgvFilterPopup;
 
-namespace DgvFilterPopupDemo {
-    public partial class Sample3 : DgvFilterPopupDemo.Sample0 {
-        public Sample3() {
+namespace DgvFilterPopupDemo
+{
+    public partial class Sample3 : DgvFilterPopupDemo.Sample0
+    {
+        public Sample3()
+        {
             InitializeComponent();
         }
 
-        private void Sample3_Load(object sender, EventArgs e) {
+        private void Sample3_Load(object sender, EventArgs e)
+        {
             InitGrid();
             DgvFilterManager fm = new DgvFilterManager();
 
@@ -30,14 +34,21 @@ namespace DgvFilterPopupDemo {
 
         }
 
-        void fm_ColumnFilterAdding(object sender, ColumnFilterEventArgs e) {
-            switch (e.Column.Name){
+        void fm_ColumnFilterAdding(object sender, ColumnFilterEventArgs e)
+        {
+            switch (e.Column.Name)
+            {
+                case "ShipName":
+                case "ShipAdress":
+                    e.ColumnFilter = new DgvMultiTextBoxColumnFilter();
+                    break;
+
                 case "ShipVia":
                 case "OrderDate":
                 case "Freight":
-                e.ColumnFilter = new DgvComboBoxColumnFilter();
-                break;
-            } 
+                    e.ColumnFilter = new DgvMultiCheckBoxColumnFilter();
+                    break;
+            }
         }
 
     }

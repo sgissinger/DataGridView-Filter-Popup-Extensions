@@ -1,0 +1,1377 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DgvFilterPopup</name>
+    </assembly>
+    <members>
+        <member name="T:DgvFilterPopup.ColumnFilterEventHandler">
+            <summary>
+            Represents the method that will handle an event related to a column filter.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:DgvFilterPopup.ColumnFilterEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="T:DgvFilterPopup.ColumnFilterEventArgs">
+            <summary>
+            Provides data for a column filter event. 
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.ColumnFilterEventArgs.#ctor(System.Windows.Forms.DataGridViewColumn,DgvFilterPopup.DgvBaseColumnFilter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.ColumnFilterEventArgs"/> class.
+            </summary>
+            <param name="Column">The DstaGridView column.</param>
+            <param name="ColumnFilter">The column filter instance.</param>
+        </member>
+        <member name="P:DgvFilterPopup.ColumnFilterEventArgs.Column">
+            <summary>
+            Gets the DataGridView column involved in the event.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.ColumnFilterEventArgs.ColumnFilter">
+            <summary>
+            Gets or sets the column filter instance.
+            </summary>
+            <value>A column filter instance.</value>
+        </member>
+        <member name="P:DgvFilterPopup.ColumnFilterEventArgs.Handled">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:DgvFilterPopup.ColumnFilterEventArgs"/> is handled.
+            </summary>
+            <value><c>true</c> if handled; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:DgvFilterPopup.DgvTextBoxColumnFilter">
+            <summary>
+            A standard <i>column filter</i> implementation for textbox columns.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvBaseColumnFilter">
+            <summary>
+            The base class from which to derive effective <i>column filter</i> classes
+            </summary>
+            <remarks>
+            The purpose of a <i>column filter</i> control is to contain visual elements allowing the end user to construct a filter.
+            When inheriting from it, you can work just like creating any other user control. 
+            This class is a derivation of <b>UserControl</b> and provide functionalities to 
+            cooperate with DgvFilterManager. 
+            <para>
+            NOTE: 
+            This class must be intended as an abstract class. However, declaring it as abstract,
+            would generate errors whitin the designer when designing derived classes.
+            </para>
+            <para>
+            You should override <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)"/> to provide a filter expression construction 
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties. 
+            </para>
+            </remarks>      
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)">
+            <summary>
+            Called by the <i>filter manager</i>, inits the <i>column filter</i> and raises the FilterInitializing event.
+            </summary>
+            <param name="FilterManager">The <i>filter manager</i>.</param>
+            <param name="FilterHost">The filter host.</param>
+            <param name="gridColumn">The DataGridView column.</param>
+            <param name="boundDataView">The bound data view.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Raises the <see cref="E:DgvFilterPopup.DgvBaseColumnFilter.FilterInitializing"/> event
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>, 
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method. 
+            You can ovverride this method to provide initialization code. 
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.FilterExpressionBuild">
+            <summary>
+            Forces the rebuilt of filter expression
+            </summary>
+            <remarks>
+            This method is called by <see cref="T:DgvFilterPopup.DgvFilterManager"/> when popup is closed, to 
+            force recreation of the filter expression. 
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Raises the <see cref="E:DgvFilterPopup.DgvBaseColumnFilter.FilterExpressionBuilding"/> event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction 
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.StringEscape(System.String)">
+            <summary>
+            Escapes a string to be suitable for filter expression.
+            </summary>
+            <param name="s">The string to escape.</param>
+            <returns>The escaped string</returns>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.FormatValue(System.Object,System.Type)">
+            <summary>
+            Returns the string representation of the passed value, based on target type.
+            </summary>
+            <param name="value">The value to be formatted.</param>
+            <param name="targetType">The target type.</param>
+            <returns>The string representation of the passed value</returns>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.GetNullCondition(System.String)">
+            <summary>
+            Returns a null condition string to be used in filter expression.
+            </summary>
+            <param name="DataColumnName">Name of the data column.</param>
+            <returns>A string to be used in the filter expression representing a null condition</returns>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseColumnFilter.GetNotNullCondition(System.String)">
+            <summary>
+            Returns a not null condition string to be used in filter expression.
+            </summary>
+            <param name="DataColumnName">Name of the data column.</param>
+            <returns>A string to be used in the filter expression representing a not null condition</returns>
+        </member>
+        <member name="E:DgvFilterPopup.DgvBaseColumnFilter.FilterExpressionBuilding">
+            <summary>
+            Occurs before the filter expression is about to be built.
+            </summary>
+        </member>
+        <member name="E:DgvFilterPopup.DgvBaseColumnFilter.FilterInitializing">
+            <summary>
+            Occurs when the filter column is about to be initialized.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.FilterApplySoon">
+            <summary>
+            Gets or sets a value indicating whether filter apply soon after a user performs some changes.
+            </summary>
+            <value><c>true</c> (default) if to apply soon; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression">
+            <summary>
+            Gets and sets the filter expression.
+            </summary>
+            <remarks>
+            It's the filter expression on the column. Its value is used by the <see cref="T:DgvFilterPopup.DgvFilterManager"/> to build the whole filter expression.
+            In inherited class, set its value in the override of <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)"/>.
+            The filter expression must follow the rules of the DataView <see cref="P:System.Data.DataView.RowFilter"/> property.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption">
+            <summary>
+            Gets and sets the caption to show in the column header when the filter is active.
+            </summary>
+            <remarks>
+            Represents the caption to show in the column header when the filter is active.
+            In inherited class, set its value in the override of <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)"/>.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.Active">
+            <summary>
+            Gets or sets a value indicating whether the filter is active.
+            </summary>
+            <value><c>true</c> if active; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.HFilterAlignment">
+            <summary>
+            Specifies how the <i>column filter</i> control is horizontally aligned inside the <i>filter host</i>.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.VFilterAlignment">
+            <summary>
+            Specifies how the <i>column filter</i> control is vertically aligned inside the <i>filter host</i>.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.BoundDataView">
+            <summary>
+            Gets the <b>DataView</b> acting as the data source of the <b>DataGridView</b> to which this <i>column filter</i> is applied.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.FilterHost">
+            <summary>
+            Gets the <i>filter host</i> control in which this <i>column filter</i> is shown.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.FilterManager">
+            <summary>
+            Gets the <i>filter manager</i>.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.DataGridViewColumn">
+            <summary>
+            Gets the <b>DataGridView</b> column to which this <i>column filter</i> is applied.
+            </summary>
+            <value>The data grid view column.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.ColumnDataType">
+            <summary>
+            Gets the type of the data bound to the <b>DataGridView</b> column.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseColumnFilter.OriginalDataGridViewColumnHeaderText">
+            <summary>
+            Gets the original <b>DataGridView</b> column header text.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvTextBoxColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvTextBoxColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvTextBoxColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox control containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvTextBoxColumnFilter.TextBoxValue">
+            <summary>
+            Gets the TextBox control containing the value.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvMultiTextBoxColumnFilter">
+            <summary>
+            A standard <i>column filter</i> implementation for textbox columns.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.filters">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboItems">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboItemsWithoutNull">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboItemsAndOr">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboWidth">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.textBoxWidth">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.#ctor">
+            <summary>
+            Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ProcessDialogKey(System.Windows.Forms.Keys)">
+            <summary>
+            TODO: Documentation ProcessDialogKey
+            </summary>
+            <param name="keyData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> userPermissions containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> ctl is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> ctl of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> userPermissions containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> ctl of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.OnFilterChanged(System.Object,System.EventArgs)">
+            <summary>
+            TODO: Documentation OnFilterChanged
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.buttonStack_Click(System.Object,System.EventArgs)">
+            <summary>
+            TODO: Documentation buttonStack_Click
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.buttonUnStack_Click(System.Object,System.EventArgs)">
+            <summary>
+            TODO: Documentation buttonUnStack_Click
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.StackFilter">
+            <summary>
+            TODO: Documentation StackFilter
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.UnstackFilter">
+            <summary>
+            TODO: Documentation UnstackFilter
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ApplyFilter(DgvFilterPopup.FilterResult,System.Windows.Forms.ComboBox,System.String,System.String)">
+            <summary>
+            TODO: Documentation ApplyFilter
+            </summary>
+            <param name="filterResult"></param>
+            <param name="comboBox"></param>
+            <param name="filterValue"></param>
+            <param name="andor"></param>
+            <returns></returns>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiTextBoxColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox ctl containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.TextBoxValue">
+            <summary>
+            Gets the TextBox ctl containing the value.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvMultiTextBoxColumnFilter.FilterComponents">
+            <summary>
+            TODO: Documentation Class
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvNumRangeColumnFilter">
+            <summary>
+            An extended <i>column filter</i> implementation allowing filters on numeric ranges.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvNumRangeColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvNumRangeColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvNumRangeColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvNumRangeColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvNumRangeColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvNumRangeColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvNumRangeColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvNumRangeColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox control containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvNumRangeColumnFilter.TextBoxValue">
+            <summary>
+            Gets the TextBox control containing the first value.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvNumRangeColumnFilter.TextBoxValue2">
+            <summary>
+            Gets the TextBox control containing the second value.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvMultiCheckBoxColumnFilter">
+            <summary>
+            A standard <i>column filter</i> implementation for textbox columns.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.checkedItems">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.distinctDataTable">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.#ctor">
+            <summary>
+            Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.#ctor(System.Nullable{System.Int32})">
+            <summary>
+            Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
+            </summary>
+            <param name="width"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> userPermissions containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> ctl is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> ctl of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> userPermissions containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> ctl of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.OnFilterChanged(System.Object,System.EventArgs)">
+            <summary>
+            TODO: Documentation OnFilterChanged
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ApplyFilter(DgvFilterPopup.FilterResult,System.String)">
+            <summary>
+            TODO: Documentation ApplyFilter
+            </summary>
+            <param name="filterResult"></param>
+            <param name="filterText"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.FilterListView(System.String)">
+            <summary>
+            TODO: Documentation FilterListView
+            </summary>
+            <param name="filter"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.listView_ItemChecked(System.Object,System.Windows.Forms.ItemCheckedEventArgs)">
+            <summary>
+            TODO: Documentation listView_ItemChecked
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.textBoxSearch_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            TODO: Documentation textBoxSearch_TextChanged
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ListView">
+            <summary>
+            Gets the ComboBox ctl containing the available operators.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvBaseFilterHost">
+             <summary>
+             The base class from which to derive effective <i>filter host</i> controls
+             </summary>
+             <remarks>
+             The purpose of the <i>filter host</i> control is to show a popup near a right-clicked column and to 
+             host child <i>column filter</i> controls. 
+             When the popup is shown, only the <i>column filter</i> control related to right-clicked column
+             is visibile. 
+             <b>DgvBaseFilterHost</b> is a derivation of <b>UserControl</b> and provide functionalities to 
+             cooperate with <see cref="T:DgvFilterPopup.DgvFilterManager"/>.  
+             <para>
+             NOTE: 
+             This class must be intended as an abstract class. However, declaring it as abstract,
+             would generate errors whitin the designer when designing derived classes.
+             </para>
+             <para>
+             In your derivation, you have to provide a host area (such as a panel) and ovverride the 
+             <see cref="P:DgvFilterPopup.DgvBaseFilterHost.FilterClientArea"/> to return it. Also, create visual elements 
+             for <i>remove filter</i>, <i>remove all filters</i>, <i>apply filter</i> and use the 
+             <b>DgvFilterManager</b> methods <see cref="M:DgvFilterPopup.DgvFilterManager.ActivateFilter(System.Boolean)"/> and 
+             <see cref="M:DgvFilterPopup.DgvFilterManager.ActivateAllFilters(System.Boolean)"/>. 
+             </para>
+             </remarks>
+             <example>
+             <code>
+            public partial class DgvFilterHost : DgvBaseFilterHost {
+            
+                public DgvFilterHost() {
+                    InitializeComponent();
+                    this.CurrentColumnFilterChanged += new EventHandler(DgvFilterHost_CurrentColumnFilterChanged);
+                }
+             
+                void DgvFilterHost_CurrentColumnFilterChanged(object sender, EventArgs e) {
+                    lblColumnName.Text = CurrentColumnFilter.OriginalDataGridViewColumnHeaderText;
+                }
+             
+                public override Control FilterClientArea {
+                    get {
+                        return this.panelFilterArea;
+                    }
+                }
+             
+                private void tsOK_Click(object sender, EventArgs e) {
+                    FilterManager.ActivateFilter(true);
+                    this.Popup.Close();
+                }
+             
+                private void tsRemove_Click(object sender, EventArgs e) {
+                    FilterManager.ActivateFilter(false);
+                    this.Popup.Close();
+                }
+             
+                private void tsRemoveAll_Click(object sender, EventArgs e) {
+                    FilterManager.ActivateAllFilters(false);
+                    this.Popup.Close();
+                }
+             
+            }
+             </code>
+             </example>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseFilterHost.DoAutoFit">
+            <summary>
+            Performs growing / shrinking of the <i>filter host</i> to best fit the current visibile <i>column filter</i>.
+            </summary>
+            <remarks>
+            Ovverride this method to provide your own resize logic.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseFilterHost.AlignFilter">
+            <summary>
+            Aligns the <i>column filter</i> into the filter client area.
+            </summary>
+            <remarks>
+            Ovverride this method to provide your own alignment logic.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseFilterHost.BitmapToRegion(System.Drawing.Bitmap,System.Drawing.Color)">
+            <summary>
+            Returns a region based on the transparency color of a bitmap.
+            </summary>
+            <param name="bitmap">The bitmap.</param>
+            <param name="transparencyColor">The transparency color.</param>
+            <returns>A region</returns>
+        </member>
+        <member name="M:DgvFilterPopup.DgvBaseFilterHost.RegisterComboBox(System.Windows.Forms.ComboBox)">
+            <summary>
+            Registers the a combo box.
+            </summary>
+            <param name="comboBox">The combo box.</param>
+            <remarks>
+            When the user clicks on an <b>ComboBox</b> item that is outside of the
+            host area, this cause an unwanted closing of the <i>filter host</i>. 
+            If you use a <b>ComboBox</b> in a customized <i>column filter</i>, 
+            be sure to call this method in your filter intitialitazion code.
+            </remarks>
+        </member>
+        <member name="E:DgvFilterPopup.DgvBaseFilterHost.CurrentColumnFilterChanged">
+            <summary>
+            Occurs when the current visible <i>column filter</i> is changed.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseFilterHost.FilterClientArea">
+            <summary>
+            Return the effective area to which <i>column filters</i> will be added.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseFilterHost.Popup">
+            <summary>
+            Gets the <b>ToolStripDropDown</b> object used to popup the <i>filter host</i>
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseFilterHost.FilterManager">
+            <summary>
+            Gets or sets the <i>filter manger</i> 
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseFilterHost.CurrentColumnFilter">
+            <summary>
+            Gets or sets the currently visibile <i>column filter</i> control
+            </summary> 
+        </member>
+        <member name="P:DgvFilterPopup.DgvBaseFilterHost.SizeDifference">
+            <summary>
+            Gets the original size difference of the <i>filter host</i> and the <see cref="P:DgvFilterPopup.DgvBaseFilterHost.FilterClientArea"/>.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvMonthYearColumnFilter">
+            <summary>
+            An extended <i>column filter</i> implementation allowing filters on date, using months and years.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvMonthYearColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMonthYearColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMonthYearColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMonthYearColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvMonthYearColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMonthYearColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMonthYearColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMonthYearColumnFilter.MonthCsvList">
+            <summary>
+            Gets or sets the month comma separated list. 
+            </summary>
+            <value>The month CSV list.</value>
+            <remarks>
+            Allows you to set once your culture-specific comma separated list of months. 
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMonthYearColumnFilter.YearMin">
+            <summary>
+            Gets or sets the minimum year shown in the years combo.
+            </summary>
+            <value>The year min.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMonthYearColumnFilter.YearMax">
+            <summary>
+            Gets or sets the maximum year shown in the years combo.
+            </summary>
+            <value>The year min.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMonthYearColumnFilter.ComboBoxMonth">
+            <summary>
+            Gets the ComboBox control containing the months list.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMonthYearColumnFilter.ComboBoxYear">
+            <summary>
+            Gets the ComboBox control containing the years list.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.HFilterAlignment">
+            <summary>
+            Specifies how the <i>column filter</i> control is horizontally aligned inside the <i>filter host</i>.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.VFilterAlignment">
+            <summary>
+            Specifies how the <i>column filter</i> control is vertically aligned inside the <i>filter host</i>.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvComboBoxColumnFilter">
+            <summary>
+            A standard <i>column filter</i> implementation for ComboBox columns.
+            </summary>
+            <remarks>
+            If the <b>DataGridView</b> column to which this <i>column filter</i> is applied
+            is not a ComboBox column, it automatically creates a distinct list of values from the bound <b>DataView</b> column.
+            If the DataView changes, you should do an explicit call to <see cref="M:DgvFilterPopup.DgvComboBoxColumnFilter.RefreshValues"/> method.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvComboBoxColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvComboBoxColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvComboBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvComboBoxColumnFilter.RefreshValues">
+            <summary>
+            For non-combobox columns, refreshes the list of the <b>DataView</b> values in the column.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvComboBoxColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="F:DgvFilterPopup.DgvComboBoxColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvComboBoxColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvComboBoxColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvComboBoxColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox control containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvComboBoxColumnFilter.ComboBoxValue">
+            <summary>
+            Gets the ComboBox control containing the available values.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvCheckBoxColumnFilter">
+            <summary>
+            A standard <i>column filter</i> implementation for checkbox columns.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvCheckBoxColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvCheckBoxColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvCheckBoxColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvCheckBoxColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvCheckBoxColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvCheckBoxColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvCheckBoxColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvCheckBoxColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox control containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvCheckBoxColumnFilter.CheckBoxValue">
+            <summary>
+            Gets the CheckBox control containing the checked value.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvFilterHost">
+            <summary>
+            Is the standard implementation of DgvBaseFilterHost
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvFilterHost.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterHost.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterHost.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterHost.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvFilterHost"/> class.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterHost.FilterClientArea">
+            <summary>
+            Return the effective area to which the <i>column filters</i> will be added.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:DgvFilterPopup.DgvFilterManager">
+            <summary>
+            The main class involved in adding filtering capabilities to a DataGridView.  
+            </summary>
+            <remarks>
+            This is the class that you use to add filtering capabilities to a <b>DataGridView</b>. The
+            <b>DataGridView</b> must be data bound to a <b>DataTable</b>, a <b>DataView</b> or a <b>BindingSource</b> which in turn is
+            bound to one of these two.
+            When you assign a <b>DataGridView</b> to a <b>DgvFilterManager</b>, it attaches some handlers to respond 
+            to right click on column headers and to perform some custom painting on the grid. 
+            When the user right clicks a column header, the <b>DgvFilterManager</b> shows a popup near the column.
+            This popup is a control that serves as host for other controls, one for each column. Only one of
+            these child controls is visibile, based on clicked column. 
+            We have one <i>filter host</i> control and many <i>column filter</i> child controls. 
+            <para>
+            The <i>filter host</i> control must be a derivation of the <see cref="T:DgvFilterPopup.DgvBaseFilterHost"/> class, while filter controls must be
+            derived by the <see cref="T:DgvFilterPopup.DgvBaseColumnFilter"/> class. These two classes don't provide any user interface. 
+            As a default, <b>DgvFilterManager</b> uses the standard derivation <b>DgvFilterHost</b> and, depending on column type and data type,
+            one of the standard derivations: <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/>
+            , <see cref="T:DgvFilterPopup.DgvCheckBoxColumnFilter"/>, <see cref="T:DgvFilterPopup.DgvComboBoxColumnFilter"/> 
+            and <see cref="T:DgvFilterPopup.DgvDateColumnFilter"/>. 
+            </para>
+            <para>
+            When a <b>DataGridView</b> is attached, the manager perform the following actions: 
+            <ul>
+            <li>it creates a <i>filter host</i>, that is an instance of the <b>DgvFilterHost</b> class. If you previously provided a
+            <i>filter host</i>, this step is skipped.</li> 
+            <li>it creates an array of <b>DgvBaseColumnFilter</b>, one per column, and initializes each element to a specialization 
+            of <b>DgvBaseColumnFilter</b>. If <see cref="P:DgvFilterPopup.DgvFilterManager.AutoCreateFilters"/> is false, this step is skipped.
+            </li>
+            </ul>
+            </para>
+            <para>
+            You can force a specific <i>column filter</i> for a certain column, intervening in this process through the events 
+            <see cref="E:DgvFilterPopup.DgvFilterManager.ColumnFilterAdding"/> and <see cref="E:DgvFilterPopup.DgvFilterManager.ColumnFilterAdded"/>. You can also intervene, after the entire process, replacing 
+            a <i>column filter</i> instance in the array with another instance you created. 
+            </para>
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvFilterManager"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.#ctor(System.Windows.Forms.DataGridView,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvFilterManager"/> class.
+            </summary>
+            <param name="dataGridView">The <b>DataGridView</b> to which attach filtering capabilities</param>
+            <param name="autoCreateFilters">if set to <c>true</c> automatically creates a <i>column filter</i> for each column</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.#ctor(System.Windows.Forms.DataGridView)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvFilterManager"/> class.
+            </summary>
+            <param name="dataGridView">The <b>DataGridView</b> to which attach filtering capabilities.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.mDataGridView_CellMouseClick(System.Object,System.Windows.Forms.DataGridViewCellMouseEventArgs)">
+            <summary>
+            Shows the popup when user right-clicks a column header
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.Windows.Forms.DataGridViewCellMouseEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.OnFilteredGridPaint(System.Object,System.Windows.Forms.DataGridViewCellPaintingEventArgs)">
+            <summary>
+            Paints a funnel icon in the cell origin when some column is filtered.
+            </summary>
+            <param name="sender">The sender</param>
+            <param name="e">The <see cref="T:System.Windows.Forms.DataGridViewCellPaintingEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override this method to provide your own painting
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.OnHighlightedColumnPaint(System.Object,System.Windows.Forms.DataGridViewCellPaintingEventArgs)">
+            <summary>
+            Performs customized column header painting when the popup is visibile. 
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">The <see cref="T:System.Windows.Forms.DataGridViewCellPaintingEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override this method to provide your own painting
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.OnFilteredColumnPaint(System.Object,System.Windows.Forms.DataGridViewCellPaintingEventArgs)">
+            <summary>
+            Performs customized column header painting when the column is filtered.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">The <see cref="T:System.Windows.Forms.DataGridViewCellPaintingEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override this method to provide your own painting
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.ShowPopup(System.Int32)">
+            <summary>
+            Shows the popup.
+            </summary>
+            <param name="ColumnIndex">Index of the column.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.ActivateFilter(System.Boolean,System.Int32)">
+            <summary>
+            Activates / Deactivates the filter for the column specified by ColumnIndex.
+            </summary>
+            <param name="Active">The active state to set</param>
+            <param name="ColumnIndex">Index of the column.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.ActivateFilter(System.Boolean,System.String)">
+            <summary>
+            Activates / Deactivates the filter for the column specified by ColumnName.
+            </summary>
+            <param name="Active">The active state to set</param>
+            <param name="ColumnName">Name of the column.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.ActivateFilter(System.Boolean)">
+            <summary>
+            Activates / Deactivates the filter for the current, that is last right-clicked, column.
+            </summary>
+            <param name="Active">The active state to set</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.ActivateAllFilters(System.Boolean)">
+            <summary>
+            Activates / Deactivates all filters.
+            </summary>
+            <param name="Active">The active state to set</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvFilterManager.RebuildFilter">
+            <summary>
+            Rebuilds the whole filter expression.
+            </summary>
+            <remarks>
+            The whole filter expression is the conjunction of each <i>column filter</i> and the <see cref="P:DgvFilterPopup.DgvFilterManager.BaseFilter"/>. 
+            Call this method to refresh and apply the whole filter expression.
+            </remarks>
+        </member>
+        <member name="E:DgvFilterPopup.DgvFilterManager.ColumnFilterAdding">
+            <summary>
+            Occurs when a <i>column filter</i> instance for a column is about to be automatically created.
+            </summary>
+            <remarks>
+            Using this event you can set the <see cref="P:DgvFilterPopup.ColumnFilterEventArgs.ColumnFilter"/> 
+            property to force the <see cref="T:DgvFilterPopup.DgvBaseColumnFilter"/> specialization to use for the 
+            column. 
+            This event is raised only if <see cref="P:DgvFilterPopup.DgvFilterManager.AutoCreateFilters"/> is true.
+            </remarks>
+        </member>
+        <member name="E:DgvFilterPopup.DgvFilterManager.ColumnFilterAdded">
+            <summary>
+            Occurs when a <i>column filter</i> instance is created.
+            This event is raised only if <see cref="P:DgvFilterPopup.DgvFilterManager.AutoCreateFilters"/> is true.
+            </summary>
+        </member>
+        <member name="E:DgvFilterPopup.DgvFilterManager.PopupShowing">
+            <summary>
+            Occurs when the popup is about to be shown
+            </summary>
+            <remarks>
+            Use this event to customize the popup position. Set the Handled property of the event argument to <c>true</c>.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.AutoCreateFilters">
+            <summary>
+            Gets or sets a value indicating whether the manager must create <i>column filters</i>.
+            </summary>
+            <value><c>true</c> by default.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.FilterHost">
+            <summary>
+            Gets and sets the <i>filter host</i> to use. 
+            </summary>
+            <remarks>
+            The default <i>filter host</i> is an instance of <see cref="T:DgvFilterPopup.DgvFilterHost"/>
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.DataGridView">
+            <summary>
+            Gets and sets the DataGridView to which apply filtering capabilities.
+            </summary>
+            <remarks>
+            <para>
+            When a <b>DataGridView</b> is attached, the manager perform the following actions: 
+            <ul>
+            <li>it creates a <i>filter host</i>, that is an instance of the <b>DgvFilterHost</b> class. If you previously provided a
+            <i>filter host</i>, this step is skipped.</li> 
+            <li>it creates an array of <b>DgvBaseColumnFilter</b>, one per column, and initializes each element to a specialization 
+            of <b>DgvBaseColumnFilter</b>. If <see cref="P:DgvFilterPopup.DgvFilterManager.AutoCreateFilters"/> is false, this step is skipped.
+            </li>
+            </ul>
+            </para>
+            <para>
+            You can force a specific <i>column filter</i> for a certain column, intervening in this process through the events 
+            <see cref="E:DgvFilterPopup.DgvFilterManager.ColumnFilterAdding"/> and <see cref="E:DgvFilterPopup.DgvFilterManager.ColumnFilterAdded"/>. You can also intervene, after the entire process, replacing 
+            a <i>column filter</i> instance in the array with another instance you created. 
+            </para>
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.BaseFilter">
+            <summary>
+            Gets and sets developer provided filter expression. This expression
+            will be "merged" with end-user created filters.
+            </summary>
+            <value>The base filter.</value>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.Item(System.Int32)">
+            <summary>
+            Gets or sets the <i>column filter</i> control related to the ColumnIndex
+            </summary>
+            <param name="ColumnIndex">The index of the <b>DataGridView</b> column</param>
+            <returns>the <b>DgvBaseColumnFilter</b> related to the <b>DataGridView</b> column</returns>
+            <remarks>
+            This indexer allow you to get and set the <i>column filter</i> instance for the column. 
+            You can set one of the standard <i>column filter</i> implementation or an instance 
+            of your own <b>DgvBaseFilterColumn</b> specialization.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.Item(System.String)">
+            <summary>
+            Gets or sets the <i>column filter</i> control related to the ColumnName
+            </summary>
+            <param name="ColumnName">The name of the <b>DataGridView</b> column</param>
+            <returns>the DgvBaseColumnFilter related to the <b>DataGridView</b> column</returns>
+            <remarks>
+            This indexer allow you to get and set the <i>column filter</i> instance for the column. 
+            You can set one of the standard <i>column filter</i> implementation or an instance 
+            of your own <b>DgvBaseFilterColumn</b> specialization.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvFilterManager.FunnelPicture">
+            <summary>
+            Gets a funnel picture.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.FilterResult">
+            <summary>
+            TODO: Documentation Class
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.FilterResult.#ctor">
+            <summary>
+            TODO: Documentation Constructor
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.FilterResult.Expression">
+            <summary>
+            TODO: Documentation Property
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.FilterResult.Caption">
+            <summary>
+            TODO: Documentation Property
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvDateColumnFilter">
+            <summary>
+            A standard <i>column filter</i> implementation for date columns.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvDateColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvDateColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvDateColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox control containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvDateColumnFilter.DateTimePickerValue">
+            <summary>
+            Gets the DateTimePicker control containing the date value.
+            </summary>
+        </member>
+        <member name="T:DgvFilterPopup.DgvDateRangeColumnFilter">
+            <summary>
+            An extended <i>column filter</i> implementation allowing filters on date ranges.
+            </summary>
+        </member>
+        <member name="F:DgvFilterPopup.DgvDateRangeColumnFilter.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateRangeColumnFilter.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateRangeColumnFilter.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateRangeColumnFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:DgvFilterPopup.DgvDateRangeColumnFilter"/> class.
+            </summary>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateRangeColumnFilter.OnFilterInitializing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Perform filter initialitazion and raises the FilterInitializing event.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            When this <i>column filter</i> control is added to the <i>column filters</i> array of the <i>filter manager</i>,
+            the latter calls the <see cref="M:DgvFilterPopup.DgvBaseColumnFilter.Init(DgvFilterPopup.DgvFilterManager,DgvFilterPopup.DgvBaseFilterHost,System.Windows.Forms.DataGridViewColumn,System.Data.DataView)"/> method which, in turn, calls this method.
+            You can ovverride this method to provide initialization code or you can create an event handler and 
+            set the <i>Cancel</i> property of event argument to true, to skip standard initialization.
+            </remarks>
+        </member>
+        <member name="M:DgvFilterPopup.DgvDateRangeColumnFilter.OnFilterExpressionBuilding(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Builds the filter expression and raises the FilterExpressionBuilding event
+            </summary>
+            <param name="sender">The event source.</param>
+            <param name="e">The <see cref="T:System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Override <b>OnFilterExpressionBuilding</b> to provide a filter expression construction
+            logic and to set the values of the <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterExpression"/> and <see cref="P:DgvFilterPopup.DgvBaseColumnFilter.FilterCaption"/> properties.
+            The <see cref="T:DgvFilterPopup.DgvFilterManager"/> will use these properties in constructing the whole filter expression and to change the header text of the filtered column.
+            Otherwise, you can create an event handler and set the <i>Cancel</i> property of event argument to true, to skip standard filter expression building logic.
+            </remarks>
+        </member>
+        <member name="P:DgvFilterPopup.DgvDateRangeColumnFilter.ComboBoxOperator">
+            <summary>
+            Gets the ComboBox control containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvDateRangeColumnFilter.DateTimePickerValue">
+            <summary>
+            Gets the DateTimePicker control containing the date value.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvDateRangeColumnFilter.DateTimePickerValue2">
+            <summary>
+            Gets the DateTimePicker control containing the second date value.
+            </summary>
+        </member>
+    </members>
+</doc>

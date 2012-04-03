@@ -5,7 +5,8 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace DgvFilterPopup {
+namespace DgvFilterPopup
+{
 
 
     /// <summary>
@@ -68,7 +69,8 @@ namespace DgvFilterPopup {
     ///}
     /// </code>
     /// </example>
-    public class DgvBaseFilterHost : UserControl {
+    public class DgvBaseFilterHost : UserControl
+    {
 
         #region EVENTS
 
@@ -105,52 +107,59 @@ namespace DgvFilterPopup {
         /// </summary>
         public ToolStripDropDown Popup
         {
-          get { 
-              if (mPopup==null) {
-                mPopup = new ToolStripDropDown();
-                ToolStripControlHost ControlHost = new ToolStripControlHost(this);
-                ControlHost.Padding = Padding.Empty;
-                ControlHost.Margin = Padding.Empty;
-                ControlHost.AutoSize = false;
-                mPopup.Padding = Padding.Empty;
-                mPopup.Items.Add(ControlHost);
-                mPopup.Region = this.Region;
-              }
-              return mPopup; 
-          }
+            get
+            {
+                if (mPopup == null)
+                {
+                    mPopup = new ToolStripDropDown();
+                    ToolStripControlHost ControlHost = new ToolStripControlHost(this);
+                    ControlHost.Padding = Padding.Empty;
+                    ControlHost.Margin = Padding.Empty;
+                    ControlHost.AutoSize = false;
+                    mPopup.Padding = Padding.Empty;
+                    mPopup.Items.Add(ControlHost);
+                    mPopup.Region = this.Region;
+                }
+                return mPopup;
+            }
         }
 
 
-        
+
         /// <summary>
         /// Gets or sets the <i>filter manger</i> 
         /// </summary>
-        public DgvFilterManager FilterManager {
+        public DgvFilterManager FilterManager
+        {
             set { mFilterManager = value; }
             get { return mFilterManager; }
         }
-                    
 
-        
+
+
         /// <summary>
         /// Gets or sets the currently visibile <i>column filter</i> control
         /// </summary> 
-        public DgvBaseColumnFilter CurrentColumnFilter {
+        public DgvBaseColumnFilter CurrentColumnFilter
+        {
             get { return mCurrentColumnFilter; }
-            set {
-                  // Called once: store the original size difference of the filterhost and the filterClientArea
-                  if (mSizeDifference == Size.Empty) { 
-                      mSizeDifference = System.Drawing.Size.Subtract(this.Size, FilterClientArea.Size);
-                      this.MinimumSize = this.Size;
-                  }
-                  if (mCurrentColumnFilter != null) mCurrentColumnFilter.Visible = false;
-                  mCurrentColumnFilter = value;
-                  DoAutoFit();
-                  if (CurrentColumnFilterChanged != null) {
-                      EventArgs e = new EventArgs();
-                      CurrentColumnFilterChanged(this, e);
-                  }
-                  mCurrentColumnFilter.Visible = true;
+            set
+            {
+                // Called once: store the original size difference of the filterhost and the filterClientArea
+                if (mSizeDifference == Size.Empty)
+                {
+                    mSizeDifference = System.Drawing.Size.Subtract(this.Size, FilterClientArea.Size);
+                    this.MinimumSize = this.Size;
+                }
+                if (mCurrentColumnFilter != null) mCurrentColumnFilter.Visible = false;
+                mCurrentColumnFilter = value;
+                DoAutoFit();
+                if (CurrentColumnFilterChanged != null)
+                {
+                    EventArgs e = new EventArgs();
+                    CurrentColumnFilterChanged(this, e);
+                }
+                mCurrentColumnFilter.Visible = true;
             }
         }
 
@@ -158,7 +167,8 @@ namespace DgvFilterPopup {
         /// <summary>
         /// Gets the original size difference of the <i>filter host</i> and the <see cref="DgvBaseFilterHost.FilterClientArea"/>.
         /// </summary>
-        public Size SizeDifference {
+        public Size SizeDifference
+        {
             get { return mSizeDifference; }
         }
 
@@ -173,10 +183,11 @@ namespace DgvFilterPopup {
         /// <remarks>
         /// Ovverride this method to provide your own resize logic.
         /// </remarks>
-        protected virtual void DoAutoFit() {
+        protected virtual void DoAutoFit()
+        {
             Size NewHostSize = Size.Add(mSizeDifference, mCurrentColumnFilter.Size);
             NewHostSize.Width = Math.Max(NewHostSize.Width, this.MinimumSize.Width);
-            NewHostSize.Height= Math.Max(NewHostSize.Height, this.MinimumSize.Height);
+            NewHostSize.Height = Math.Max(NewHostSize.Height, this.MinimumSize.Height);
             this.Size = NewHostSize;
 
             FilterClientArea.Size = Size.Subtract(NewHostSize, mSizeDifference);
@@ -189,19 +200,22 @@ namespace DgvFilterPopup {
         /// <remarks>
         /// Ovverride this method to provide your own alignment logic.
         /// </remarks>
-        protected void AlignFilter() { 
+        protected void AlignFilter()
+        {
             int x = 0; // VFilterAlignmentType.Left:
             int y = 0; // HFilterAlignmentType.Top:
-            switch (mCurrentColumnFilter.VFilterAlignment){
+            switch (mCurrentColumnFilter.VFilterAlignment)
+            {
                 case VFilterAlignment.Right:
                     x = FilterClientArea.Width - mCurrentColumnFilter.Width;
-                 break;
+                    break;
                 case VFilterAlignment.Center:
                     x = (FilterClientArea.Width - mCurrentColumnFilter.Width) / 2;
-                 break;
+                    break;
             }
 
-            switch (mCurrentColumnFilter.HFilterAlignment) {
+            switch (mCurrentColumnFilter.HFilterAlignment)
+            {
                 case HFilterAlignment.Bottom:
                     y = FilterClientArea.Height - mCurrentColumnFilter.Height;
                     break;
@@ -218,7 +232,8 @@ namespace DgvFilterPopup {
         /// <param name="bitmap">The bitmap.</param>
         /// <param name="transparencyColor">The transparency color.</param>
         /// <returns>A region</returns>
-        public static Region BitmapToRegion(Bitmap bitmap, Color transparencyColor) {
+        public static Region BitmapToRegion(Bitmap bitmap, Color transparencyColor)
+        {
             if (bitmap == null)
                 throw new ArgumentNullException("Bitmap", "Bitmap cannot be null!");
 
@@ -228,7 +243,8 @@ namespace DgvFilterPopup {
             GraphicsPath path = new GraphicsPath();
 
             for (int j = 0; j < height; j++)
-                for (int i = 0; i < width; i++) {
+                for (int i = 0; i < width; i++)
+                {
                     if (bitmap.GetPixel(i, j) == transparencyColor)
                         continue;
 
@@ -255,9 +271,16 @@ namespace DgvFilterPopup {
         /// If you use a <b>ComboBox</b> in a customized <i>column filter</i>, 
         /// be sure to call this method in your filter intitialitazion code.
         /// </remarks>
-        public void RegisterComboBox (ComboBox comboBox){
+        public void RegisterComboBox(ComboBox comboBox)
+        {
             comboBox.DropDown += new EventHandler(onDropDown);
             comboBox.DropDownClosed += new EventHandler(onDropDownClosed);
+        }
+
+        public void UnRegisterComboBox(ComboBox comboBox)
+        {
+            comboBox.DropDown -= new EventHandler(onDropDown);
+            comboBox.DropDownClosed -= new EventHandler(onDropDownClosed);
         }
 
         private void onDropDown(object sender, EventArgs e)

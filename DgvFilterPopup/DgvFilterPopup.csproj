@@ -76,12 +76,25 @@
     <Compile Include="FilterPopup\Extensions\DgvMonthYearColumnFilter.Designer.cs">
       <DependentUpon>DgvMonthYearColumnFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilterPopup\Extensions\DgvMultiCheckBoxColumnFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FilterPopup\Extensions\DgvMultiCheckBoxColumnFilter.designer.cs">
+      <DependentUpon>DgvMultiCheckBoxColumnFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FilterPopup\Extensions\DgvMultiTextBoxColumnFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FilterPopup\Extensions\DgvMultiTextBoxColumnFilter.designer.cs">
+      <DependentUpon>DgvMultiTextBoxColumnFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="FilterPopup\Extensions\DgvNumRangeColumnFilter.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="FilterPopup\Extensions\DgvNumRangeColumnFilter.Designer.cs">
       <DependentUpon>DgvNumRangeColumnFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilterPopup\Extensions\FilterResult.cs" />
     <Compile Include="FilterPopup\Implementations\DgvDateColumnFilter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -129,6 +142,12 @@
     <EmbeddedResource Include="FilterPopup\Extensions\DgvMonthYearColumnFilter.resx">
       <SubType>Designer</SubType>
       <DependentUpon>DgvMonthYearColumnFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilterPopup\Extensions\DgvMultiCheckBoxColumnFilter.resx">
+      <DependentUpon>DgvMultiCheckBoxColumnFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilterPopup\Extensions\DgvMultiTextBoxColumnFilter.resx">
+      <DependentUpon>DgvMultiTextBoxColumnFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FilterPopup\Extensions\DgvNumRangeColumnFilter.resx">
       <DependentUpon>DgvNumRangeColumnFilter.cs</DependentUpon>
