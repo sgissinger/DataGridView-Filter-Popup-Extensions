@@ -640,6 +640,11 @@
             TODO: Documentation Member
             </summary>
         </member>
+        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.maxCaptionItems">
+            <summary>
+            TODO: Documentation Member
+            </summary>
+        </member>
         <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.#ctor">
             <summary>
             Initializes a new userPermissions of the <see cref="T:DgvFilterPopup.DgvTextBoxColumnFilter"/> class.
@@ -691,7 +696,7 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ApplyFilter(DgvFilterPopup.FilterResult,System.String)">
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ApplyFilter(DgvFilterPopup.FilterResult,System.String,System.Int32)">
             <summary>
             TODO: Documentation ApplyFilter
             </summary>
@@ -705,16 +710,16 @@
             </summary>
             <param name="filter"></param>
         </member>
-        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.listView_ItemChecked(System.Object,System.Windows.Forms.ItemCheckedEventArgs)">
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.textBoxSearch_TextChanged(System.Object,System.EventArgs)">
             <summary>
-            TODO: Documentation listView_ItemChecked
+            TODO: Documentation textBoxSearch_TextChanged
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.textBoxSearch_TextChanged(System.Object,System.EventArgs)">
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.listView_ItemChecked(System.Object,System.Windows.Forms.ItemCheckedEventArgs)">
             <summary>
-            TODO: Documentation textBoxSearch_TextChanged
+            TODO: Documentation listView_ItemChecked
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
