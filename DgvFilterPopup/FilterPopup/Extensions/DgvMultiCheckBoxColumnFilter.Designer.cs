@@ -104,6 +104,7 @@ namespace DgvFilterPopup
             this.checkBoxSelectAll.Text = "(Select All)";
             this.checkBoxSelectAll.ThreeState = true;
             this.checkBoxSelectAll.UseVisualStyleBackColor = true;
+            this.checkBoxSelectAll.CheckStateChanged += new System.EventHandler(this.checkBoxSelectAll_CheckStateChanged);
             // 
             // checkBoxSelectNull
             // 
@@ -115,6 +116,7 @@ namespace DgvFilterPopup
             this.checkBoxSelectNull.TabIndex = 0;
             this.checkBoxSelectNull.Text = "Ø";
             this.checkBoxSelectNull.UseVisualStyleBackColor = true;
+            this.checkBoxSelectNull.CheckedChanged += new System.EventHandler(this.checkBoxSelectNull_CheckedChanged);
             // 
             // DgvMultiCheckBoxColumnFilter
             // 

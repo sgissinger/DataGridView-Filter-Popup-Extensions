@@ -127,6 +127,12 @@ namespace DgvFilterPopup
 
             FilterResult FilterResult = new FilterResult();
 
+            if (this.checkBoxSelectNull.Checked)
+            {
+                FilterResult.Expression = GetNullCondition(this.DataGridViewColumn.DataPropertyName);
+                FilterResult.Caption = "\n= Ø";
+            }
+
             foreach (String filter in this.checkedItems)
             {
                 if (!String.IsNullOrEmpty(filter))
@@ -265,6 +271,17 @@ namespace DgvFilterPopup
                     this.checkedItems.Remove(e.Item.Text);
             }
 
+            this.checkBoxSelectAll.CheckStateChanged -= this.checkBoxSelectAll_CheckStateChanged;
+
+            if (this.checkedItems.Count == this.listView.Items.Count)
+                this.checkBoxSelectAll.CheckState = CheckState.Checked;
+            else if (this.checkedItems.Count == 0)
+                this.checkBoxSelectAll.CheckState = CheckState.Unchecked;
+            else
+                this.checkBoxSelectAll.CheckState = CheckState.Indeterminate;
+
+            this.checkBoxSelectAll.CheckStateChanged += this.checkBoxSelectAll_CheckStateChanged;
+
             this.OnFilterChanged(sender, e);
         }
 
@@ -276,6 +293,39 @@ namespace DgvFilterPopup
         private void textBoxSearch_TextChanged(object sender, EventArgs e)
         {
             this.FilterListView(this.textBoxSearch.Text);
+        }
+
+        /// <summary>
+        /// TODO: Documentation textBoxSearch_TextChanged
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkBoxSelectNull_CheckedChanged(object sender, EventArgs e)
+        {
+            this.OnFilterChanged(sender, e);
+        }
+
+        /// <summary>
+        /// TODO: Documentation checkBoxSelectAll_CheckStateChanged
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void checkBoxSelectAll_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (this.checkBoxSelectAll.CheckState == CheckState.Checked)
+            {
+                this.checkBoxSelectNull.Checked = true;
+
+                foreach (ListViewItem item in this.listView.Items)
+                    item.Checked = true;
+            }
+            else if (this.checkBoxSelectAll.CheckState == CheckState.Unchecked)
+            {
+                this.checkBoxSelectNull.Checked = false;
+
+                foreach (ListViewItem item in this.listView.Items)
+                    item.Checked = false;
+            }
         }
         #endregion
     }
