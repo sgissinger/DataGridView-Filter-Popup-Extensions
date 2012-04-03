@@ -17,15 +17,7 @@ namespace DgvFilterPopup
         /// <summary>
         /// TODO: Documentation Member
         /// </summary>
-        private List<String> checkedItems = new List<String>();
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private DataTable distinctDataTable;
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private Int32 maxCaptionItems;
+        private List<String> _checkedItems = new List<String>();
         #endregion
 
         #region PROPERTIES
@@ -36,6 +28,14 @@ namespace DgvFilterPopup
         {
             get { return listView; }
         }
+        /// <summary>
+        /// TODO: Documentation Property
+        /// </summary>
+        private DataTable DistinctDataTable { get; set; }
+        /// <summary>
+        /// TODO: Documentation Property
+        /// </summary>
+        private Int32 MaxCaptionItems { get; set; }
         #endregion
 
         #region CONSTRUCTORS & FINALIZERS
@@ -71,7 +71,7 @@ namespace DgvFilterPopup
                 this.Width += offsetWidth;
             }
 
-            this.maxCaptionItems = maxCaptionItems;
+            this.MaxCaptionItems = maxCaptionItems;
 
             this.textBoxSearch.TextChanged += new EventHandler(this.textBoxSearch_TextChanged);
         }
@@ -108,12 +108,7 @@ namespace DgvFilterPopup
 
             if (e.Cancel) return;
 
-            if (!(this.DataGridViewColumn is DataGridViewComboBoxColumn))
-            {
-                this.distinctDataTable = this.BoundDataView.ToTable(true, new String[] { this.DataGridViewColumn.DataPropertyName });
-                this.distinctDataTable.DefaultView.Sort = this.DataGridViewColumn.DataPropertyName;
-            }
-
+            this.RefreshValues();
             this.FilterListView(null);
         }
 
@@ -147,7 +142,7 @@ namespace DgvFilterPopup
                 filterResult.Caption += "\n= Ø";
             }
 
-            if (this.checkedItems.Count > 0)
+            if (this._checkedItems.Count > 0)
             {
                 if (!String.IsNullOrEmpty(filterResult.Expression))
                     filterResult.Expression += " OR ";
@@ -157,7 +152,7 @@ namespace DgvFilterPopup
 
             Int32 i = 0;
 
-            foreach (String filter in this.checkedItems)
+            foreach (String filter in this._checkedItems)
             {
                 if (!String.IsNullOrEmpty(filter))
                     filterResult = this.ApplyFilter(filterResult, filter, i);
@@ -165,10 +160,10 @@ namespace DgvFilterPopup
                 i++;
             }
 
-            if (this.checkedItems.Count > 0)
+            if (this._checkedItems.Count > 0)
                 filterResult.Expression += filterResult.Expression.Substring(0, filterResult.Expression.Length - 1) + ")";
 
-            if (i > this.maxCaptionItems)
+            if (i > this.MaxCaptionItems)
                 filterResult.Caption += "\n...";
 
             if (!String.IsNullOrEmpty(filterResult.Expression))
@@ -200,6 +195,18 @@ namespace DgvFilterPopup
 
         #region METHODS
         /// <summary>
+        /// TODO: Documentation RefreshValues
+        /// </summary>
+        public void RefreshValues()
+        {
+            if (!(this.DataGridViewColumn is DataGridViewComboBoxColumn))
+            {
+                this.DistinctDataTable = this.BoundDataView.ToTable(true, new String[] { this.DataGridViewColumn.DataPropertyName });
+                this.DistinctDataTable.DefaultView.Sort = this.DataGridViewColumn.DataPropertyName;
+            }
+        }
+
+        /// <summary>
         /// TODO: Documentation ApplyFilter
         /// </summary>
         /// <param name="filterResult"></param>
@@ -207,7 +214,7 @@ namespace DgvFilterPopup
         /// <returns></returns>
         private FilterResult ApplyFilter(FilterResult filterResult, String filterText, Int32 index)
         {
-            if (index < this.maxCaptionItems)
+            if (index < this.MaxCaptionItems)
                 filterResult.Caption += "\n";
 
             if (ColumnDataType == typeof(String))
@@ -215,10 +222,16 @@ namespace DgvFilterPopup
                 // Managing the string-column case
                 String escapedFilterValue = DgvBaseColumnFilter.StringEscape(filterText.ToString());
 
-                filterResult.Expression += "'" + escapedFilterValue + "',";
+                filterResult.Expression = String.Format(CultureInfo.CurrentCulture,
+                                                        "{0}'{1}',",
+                                                        filterResult.Expression,
+                                                        escapedFilterValue);
 
-                if (index < this.maxCaptionItems)
-                    filterResult.Caption += "= " + filterText;
+                if (index < this.MaxCaptionItems)
+                    filterResult.Caption = String.Format(CultureInfo.CurrentCulture,
+                                                         "{0}= {1}",
+                                                         filterResult.Caption,
+                                                         filterText);
             }
             else
             {
@@ -227,10 +240,17 @@ namespace DgvFilterPopup
 
                 if (!String.IsNullOrEmpty(formattedValue))
                 {
-                    filterResult.Expression += formattedValue + ",";
 
-                    if (index < this.maxCaptionItems)
-                        filterResult.Caption += "= " + filterText;
+                    filterResult.Expression = String.Format(CultureInfo.CurrentCulture,
+                                                            "{0}{1},",
+                                                            filterResult.Expression,
+                                                            formattedValue);
+
+                    if (index < this.MaxCaptionItems)
+                        filterResult.Caption = String.Format(CultureInfo.CurrentCulture,
+                                                             "{0}= {1}",
+                                                             filterResult.Caption,
+                                                             filterText);
                 }
             }
 
@@ -260,7 +280,7 @@ namespace DgvFilterPopup
             }
             else
             {
-                foreach (DataRow item in this.distinctDataTable.Rows)
+                foreach (DataRow item in this.DistinctDataTable.Rows)
                 {
                     String itemValue = item[this.DataGridViewColumn.DataPropertyName].ToString();
 
@@ -269,7 +289,7 @@ namespace DgvFilterPopup
                 }
             }
 
-            foreach (String item in this.checkedItems)
+            foreach (String item in this._checkedItems)
             {
                 ListViewItem itemList = this.listView.FindItemWithText(item);
 
@@ -302,20 +322,20 @@ namespace DgvFilterPopup
         {
             if (e.Item.Checked)
             {
-                if (!this.checkedItems.Contains(e.Item.Text))
-                    this.checkedItems.Add(e.Item.Text);
+                if (!this._checkedItems.Contains(e.Item.Text))
+                    this._checkedItems.Add(e.Item.Text);
             }
             else
             {
-                if (this.checkedItems.Contains(e.Item.Text))
-                    this.checkedItems.Remove(e.Item.Text);
+                if (this._checkedItems.Contains(e.Item.Text))
+                    this._checkedItems.Remove(e.Item.Text);
             }
 
             this.checkBoxSelectAll.CheckStateChanged -= this.checkBoxSelectAll_CheckStateChanged;
 
-            if (this.checkedItems.Count == this.listView.Items.Count)
+            if (this._checkedItems.Count == this.listView.Items.Count)
                 this.checkBoxSelectAll.CheckState = CheckState.Checked;
-            else if (this.checkedItems.Count == 0)
+            else if (this._checkedItems.Count == 0)
                 this.checkBoxSelectAll.CheckState = CheckState.Unchecked;
             else
                 this.checkBoxSelectAll.CheckState = CheckState.Indeterminate;
@@ -347,7 +367,7 @@ namespace DgvFilterPopup
                 this.listView.ItemChecked -= this.listView_ItemChecked;
                 this.checkBoxSelectNull.CheckedChanged -= this.checkBoxSelectNull_CheckedChanged;
 
-                this.checkedItems = new List<String>();
+                this._checkedItems = new List<String>();
 
                 if (this.checkBoxSelectAll.CheckState == CheckState.Checked)
                 {
@@ -356,7 +376,7 @@ namespace DgvFilterPopup
                     foreach (ListViewItem item in this.listView.Items)
                     {
                         item.Checked = true;
-                        this.checkedItems.Add(item.Text);
+                        this._checkedItems.Add(item.Text);
                     }
                 }
                 else if (this.checkBoxSelectAll.CheckState == CheckState.Unchecked)

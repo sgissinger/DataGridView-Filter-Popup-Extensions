@@ -11,52 +11,47 @@ namespace DgvFilterPopup
     /// </summary>
     public partial class DgvMultiTextBoxColumnFilter : DgvBaseColumnFilter
     {
-        #region
+        #region MEMBERS
         /// <summary>
         /// TODO: Documentation Member
         /// </summary>
-        //private Int32 lastIndex;
+        private List<FilterComponents> _filters = new List<FilterComponents>();
         /// <summary>
         /// TODO: Documentation Member
         /// </summary>
-        private List<FilterComponents> filters = new List<FilterComponents>();
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private Object[] comboItems;
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private Object[] comboItemsWithoutNull;
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private Object[] comboItemsAndOr = new Object[] { "OR", "AND" };
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private Int32 comboWidth;
-        /// <summary>
-        /// TODO: Documentation Member
-        /// </summary>
-        private Int32 textBoxWidth;
+        private Object[] _comboItemsAndOr = new Object[] { "OR", "AND" };
         #endregion
 
         #region PROPERTIES
+        /// <summary>
+        /// TODO: Documentation Property
+        /// </summary>
+        private Object[] ComboItems { get; set; }
+        /// <summary>
+        /// TODO: Documentation Property
+        /// </summary>
+        private Object[] ComboItemsWithoutNull { get; set; }
+        /// <summary>
+        /// TODO: Documentation Property
+        /// </summary>
+        private Int32 ComboWidth { get; set; }
+        /// <summary>
+        /// TODO: Documentation Property
+        /// </summary>
+        private Int32 TextBoxWidth { get; set; }
         /// <summary>
         /// Gets the ComboBox ctl containing the available operators.
         /// </summary>
         public ComboBox ComboBoxOperator
         {
-            get { return comboBoxOperator; }
+            get { return this.comboBoxOperator; }
         }
-
         /// <summary>
         /// Gets the TextBox ctl containing the value.
         /// </summary>
         public TextBox TextBoxValue
         {
-            get { return textBoxValue; }
+            get { return this.textBoxValue; }
         }
         #endregion
 
@@ -108,27 +103,27 @@ namespace DgvFilterPopup
             {
                 this.Width = 320;
 
-                this.comboItems = new Object[] { "..xxx..", "xxx..", "..xxx", "=", "<>", "= Ø", "<> Ø" };
-                this.comboItemsWithoutNull = new Object[] { "..xxx..", "xxx..", "..xxx", "=", "<>" };
-                this.comboWidth = 100;
-                this.textBoxWidth = 150;
+                this.ComboItems = new Object[] { "..xxx..", "xxx..", "..xxx", "=", "<>", "= Ø", "<> Ø" };
+                this.ComboItemsWithoutNull = new Object[] { "..xxx..", "xxx..", "..xxx", "=", "<>" };
+                this.ComboWidth = 80;
+                this.TextBoxWidth = 150;
             }
             else
             {
                 this.Width = 220;
 
-                this.comboItems = new Object[] { "=", "<>", ">", "<", "<=", ">=", "= Ø", "<> Ø" };
-                this.comboItemsWithoutNull = new Object[] { "=", "<>", ">", "<", "<=", ">=" };
-                this.comboWidth = 70;
-                this.textBoxWidth = 80;
+                this.ComboItems = new Object[] { "=", "<>", ">", "<", "<=", ">=", "= Ø", "<> Ø" };
+                this.ComboItemsWithoutNull = new Object[] { "=", "<>", ">", "<", "<=", ">=" };
+                this.ComboWidth = 70;
+                this.TextBoxWidth = 80;
             }
 
-            this.comboBoxOperator.Width = this.comboWidth;
-            this.comboBoxOperator.Items.AddRange(this.comboItems);
+            this.comboBoxOperator.Width = this.ComboWidth;
+            this.comboBoxOperator.Items.AddRange(this.ComboItems);
             this.comboBoxOperator.SelectedIndex = 0;
 
-            this.textBoxValue.Width = this.textBoxWidth;
-            this.textBoxValue.Location = new Point(58 + this.comboWidth, this.textBoxValue.Location.Y);
+            this.textBoxValue.Width = this.TextBoxWidth;
+            this.textBoxValue.Location = new Point(78 + this.ComboWidth, this.textBoxValue.Location.Y);
 
             this.FilterHost.RegisterComboBox(this.comboBoxOperator);
         }
@@ -180,7 +175,7 @@ namespace DgvFilterPopup
                                             this.textBoxValue.Text,
                                             null);
 
-            foreach (FilterComponents filter in this.filters)
+            foreach (FilterComponents filter in this._filters)
             {
                 if (!String.IsNullOrEmpty(filter.TextBoxValue.Text))
                 {
@@ -219,46 +214,6 @@ namespace DgvFilterPopup
 
         #region EVENTS
         /// <summary>
-        /// TODO: Documentation textBoxValue_TextChanged
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /*private void textBoxValue_TextChanged(object sender, EventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            Int32 textBoxIdx = -1;
-
-            foreach (FilterComponents filter in filters)
-            {
-                if (filter.TextBoxValue == textBox)
-                {
-                    textBoxIdx = filters.IndexOf(filter);
-                    break;
-                }
-            }
-
-            if (sender == textBoxValue)
-            {
-                if (!String.IsNullOrEmpty(this.textBoxValue.Text) && filters.Count == 0)
-                    this.StackFilter();
-            }
-            else
-            {
-                if (textBoxIdx == lastIndex - 1 &&
-                    !String.IsNullOrEmpty(textBox.Text))
-                {
-                    this.StackFilter();
-                }
-
-                if (textBoxIdx == lastIndex - 2 &&
-                    String.IsNullOrEmpty(textBox.Text))
-                {
-                    this.UnstackFilter();
-                }
-            }
-        }*/
-
-        /// <summary>
         /// TODO: Documentation buttonStack_Click
         /// </summary>
         /// <param name="sender"></param>
@@ -281,7 +236,7 @@ namespace DgvFilterPopup
             this.UnstackFilter();
             this.OnFilterChanged(sender, e);
 
-            this.buttonUnStack.Enabled = this.filters.Count > 0;
+            this.buttonUnStack.Enabled = this._filters.Count > 0;
         }
         #endregion
 
@@ -291,55 +246,52 @@ namespace DgvFilterPopup
         /// </summary>
         private void StackFilter()
         {
-            Int32 idx = filters.Count + 1;
+            Int32 idx = _filters.Count + 1;
 
             ComboBox comboBoxAndOr = new ComboBox();
             comboBoxAndOr.Location = new Point(3, 3 + (idx * 26));
-            comboBoxAndOr.Size = new Size(40, 21);
+            comboBoxAndOr.Size = new Size(60, 21);
             comboBoxAndOr.TabIndex = idx;
             comboBoxAndOr.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxAndOr.FormattingEnabled = true;
-            comboBoxAndOr.Items.AddRange(this.comboItemsAndOr);
+            comboBoxAndOr.Items.AddRange(this._comboItemsAndOr);
             comboBoxAndOr.SelectedIndex = 0;
 
             ComboBox comboBox = new ComboBox();
-            comboBox.Location = new Point(51, 3 + (idx * 26));
-            comboBox.Size = new Size(this.comboWidth, 21);
+            comboBox.Location = new Point(71, 3 + (idx * 26));
+            comboBox.Size = new Size(this.ComboWidth, 21);
             comboBox.TabIndex = idx;
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox.FormattingEnabled = true;
-            comboBox.Items.AddRange(this.comboItemsWithoutNull);
+            comboBox.Items.AddRange(this.ComboItemsWithoutNull);
             comboBox.SelectedIndex = 0;
 
             TextBox textBox = new TextBox();
-            textBox.Location = new Point(58 + this.comboWidth, 3 + (idx * 26));
-            textBox.Size = new Size(this.textBoxWidth, 20);
+            textBox.Location = new Point(78 + this.ComboWidth, 3 + (idx * 26));
+            textBox.Size = new Size(this.TextBoxWidth, 20);
             textBox.TabIndex = idx;
             textBox.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Right);
 
-            FilterComponents filter = new FilterComponents()
+            comboBoxAndOr.SelectedValueChanged += new EventHandler(this.OnFilterChanged);
+            comboBox.SelectedValueChanged += new EventHandler(this.OnFilterChanged);
+            textBox.TextChanged += new EventHandler(this.OnFilterChanged);
+
+            this.Controls.Add(comboBoxAndOr);
+            this.Controls.Add(comboBox);
+            this.Controls.Add(textBox);
+
+            this.FilterHost.RegisterComboBox(comboBoxAndOr);
+            this.FilterHost.RegisterComboBox(comboBox);
+
+            this.FilterHost.Height = this.FilterHost.Height + 26;
+            this.Height = this.Height + 26;
+
+            this._filters.Add(new FilterComponents()
             {
                 ComboBoxAndOr = comboBoxAndOr,
                 ComboBoxOperator = comboBox,
                 TextBoxValue = textBox
-            };
-
-            comboBoxAndOr.SelectedValueChanged += new EventHandler(OnFilterChanged);
-            comboBox.SelectedValueChanged += new EventHandler(OnFilterChanged);
-            //textBox.TextChanged += new EventHandler(this.textBoxValue_TextChanged);
-            textBox.TextChanged += new EventHandler(OnFilterChanged);
-
-            this.Controls.Add(filter.ComboBoxAndOr);
-            this.Controls.Add(filter.ComboBoxOperator);
-            this.Controls.Add(filter.TextBoxValue);
-
-            this.FilterHost.RegisterComboBox(filter.ComboBoxAndOr);
-            this.FilterHost.RegisterComboBox(filter.ComboBoxOperator);
-            this.FilterHost.Height = this.FilterHost.Height + 26;
-            this.Height = this.Height + 26;
-
-            filters.Add(filter);
-            //lastIndex++;
+            });
         }
 
         /// <summary>
@@ -347,11 +299,10 @@ namespace DgvFilterPopup
         /// </summary>
         private void UnstackFilter()
         {
-            FilterComponents filter = this.filters[filters.Count - 1];
+            FilterComponents filter = this._filters[this._filters.Count - 1];
 
             filter.ComboBoxAndOr.SelectedValueChanged -= new EventHandler(this.OnFilterChanged);
             filter.ComboBoxOperator.SelectedValueChanged -= new EventHandler(this.OnFilterChanged);
-            //filter.TextBoxValue.TextChanged -= new EventHandler(this.textBoxValue_TextChanged);
             filter.TextBoxValue.TextChanged -= new EventHandler(this.OnFilterChanged);
 
             this.Controls.Remove(filter.ComboBoxAndOr);
@@ -363,8 +314,7 @@ namespace DgvFilterPopup
             this.FilterHost.Height = this.FilterHost.Height - 26;
             this.Height = this.Height - 26;
 
-            this.filters.RemoveAt(filters.Count - 1);
-            //lastIndex--;
+            this._filters.RemoveAt(this._filters.Count - 1);
         }
 
         /// <summary>

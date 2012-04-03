@@ -356,32 +356,12 @@
             A standard <i>column filter</i> implementation for textbox columns.
             </summary>
         </member>
-        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.filters">
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter._filters">
             <summary>
             TODO: Documentation Member
             </summary>
         </member>
-        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboItems">
-            <summary>
-            TODO: Documentation Member
-            </summary>
-        </member>
-        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboItemsWithoutNull">
-            <summary>
-            TODO: Documentation Member
-            </summary>
-        </member>
-        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboItemsAndOr">
-            <summary>
-            TODO: Documentation Member
-            </summary>
-        </member>
-        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.comboWidth">
-            <summary>
-            TODO: Documentation Member
-            </summary>
-        </member>
-        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter.textBoxWidth">
+        <member name="F:DgvFilterPopup.DgvMultiTextBoxColumnFilter._comboItemsAndOr">
             <summary>
             TODO: Documentation Member
             </summary>
@@ -480,6 +460,26 @@
             <summary> 
             Required method for Designer support - do not modify 
             the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ComboItems">
+            <summary>
+            TODO: Documentation Property
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ComboItemsWithoutNull">
+            <summary>
+            TODO: Documentation Property
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ComboWidth">
+            <summary>
+            TODO: Documentation Property
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.TextBoxWidth">
+            <summary>
+            TODO: Documentation Property
             </summary>
         </member>
         <member name="P:DgvFilterPopup.DgvMultiTextBoxColumnFilter.ComboBoxOperator">
@@ -630,17 +630,7 @@
             A standard <i>column filter</i> implementation for textbox columns.
             </summary>
         </member>
-        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.checkedItems">
-            <summary>
-            TODO: Documentation Member
-            </summary>
-        </member>
-        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.distinctDataTable">
-            <summary>
-            TODO: Documentation Member
-            </summary>
-        </member>
-        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.maxCaptionItems">
+        <member name="F:DgvFilterPopup.DgvMultiCheckBoxColumnFilter._checkedItems">
             <summary>
             TODO: Documentation Member
             </summary>
@@ -702,6 +692,11 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
+        </member>
+        <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.RefreshValues">
+            <summary>
+            TODO: Documentation RefreshValues
+            </summary>
         </member>
         <member name="M:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ApplyFilter(DgvFilterPopup.FilterResult,System.String,System.Int32)">
             <summary>
@@ -765,6 +760,16 @@
         <member name="P:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.ListView">
             <summary>
             Gets the ComboBox ctl containing the available operators.
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.DistinctDataTable">
+            <summary>
+            TODO: Documentation Property
+            </summary>
+        </member>
+        <member name="P:DgvFilterPopup.DgvMultiCheckBoxColumnFilter.MaxCaptionItems">
+            <summary>
+            TODO: Documentation Property
             </summary>
         </member>
         <member name="T:DgvFilterPopup.DgvMonthYearColumnFilter">
